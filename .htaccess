@@ -1,0 +1,24 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Check if the request is for the domain and redirect to the public directory
+    RewriteCond %{HTTP_HOST} ^alnafaycommodities.com$ [NC,OR]
+    RewriteCond %{HTTP_HOST} ^www.alnafaycommodities.com$ 
+
+    # Redirect all traffic to the public directory
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller (Laravel)...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
